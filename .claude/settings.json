@@ -4,6 +4,7 @@
       "Bash(./mvnw clean:*)",
       "Bash(./mvnw compile:*)",
       "Bash(./mvnw dependency:resolve:*)",
+      "Bash(./mvnw dependency:tree:*)",
       "Bash(./mvnw install:*)",
       "Bash(./mvnw package:*)",
       "Bash(./mvnw spring-boot:run:*)",
