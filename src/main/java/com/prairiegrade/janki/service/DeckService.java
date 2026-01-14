@@ -1,5 +1,6 @@
 package com.prairiegrade.janki.service;
 
+import com.prairiegrade.janki.domain.Card;
 import com.prairiegrade.janki.domain.Deck;
 import com.prairiegrade.janki.dto.DeckStats;
 import com.prairiegrade.janki.exception.DeckNotFoundException;
@@ -117,5 +118,32 @@ public class DeckService {
         long reviewCards = cardRepository.findByDeckIdAndState(id, "REVIEW").size();
 
         return new DeckStats(totalCards, newCards, learningCards, reviewCards);
+    }
+
+    /**
+     * Get cards from a deck, optionally filtered by state.
+     *
+     * @param id     ID of the deck
+     * @param filter Filter type: NEW, LEARNING, REVIEW, or ALL
+     * @return List of cards matching the filter
+     * @throws DeckNotFoundException if the deck is not found
+     */
+    @Transactional(readOnly = true)
+    public List<Card> getFilteredCards(Long id, String filter) {
+        if (!deckRepository.existsById(id)) {
+            throw new DeckNotFoundException(id);
+        }
+
+        // Normalize filter to uppercase for consistent comparison
+        String normalizedFilter = filter.toUpperCase();
+
+        // Return filtered cards based on state
+        return switch (normalizedFilter) {
+            case "NEW" -> cardRepository.findByDeckIdAndState(id, "NEW");
+            case "LEARNING" -> cardRepository.findByDeckIdAndState(id, "LEARNING");
+            case "REVIEW" -> cardRepository.findByDeckIdAndState(id, "REVIEW");
+            case "ALL" -> cardRepository.findByDeckId(id);
+            default -> cardRepository.findByDeckId(id); // Default to all
+        };
     }
 }

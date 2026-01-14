@@ -1,5 +1,6 @@
 package com.prairiegrade.janki.controller.web;
 
+import com.prairiegrade.janki.domain.Card;
 import com.prairiegrade.janki.domain.Deck;
 import com.prairiegrade.janki.service.DeckService;
 import jakarta.validation.Valid;
@@ -9,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/decks")
@@ -25,11 +28,22 @@ public class DeckWebController {
     }
 
     @GetMapping("/{id}")
-    public String viewDeck(@PathVariable Long id, Model model) {
+    public String viewDeck(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "ALL") String filter,
+            Model model) {
         Deck deck = deckService.getDeck(id);
         model.addAttribute("pageTitle", deck.getName());
         model.addAttribute("deck", deck);
         model.addAttribute("stats", deckService.getDeckStats(id));
+
+        // Add filter to model for template to know active filter
+        model.addAttribute("filter", filter);
+
+        // Get filtered cards
+        List<Card> cards = deckService.getFilteredCards(id, filter);
+        model.addAttribute("cards", cards);
+
         return "decks/view";
     }
 
