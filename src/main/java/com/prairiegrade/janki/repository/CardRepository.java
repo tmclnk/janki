@@ -2,6 +2,8 @@ package com.prairiegrade.janki.repository;
 
 import com.prairiegrade.janki.domain.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,4 +38,14 @@ public interface CardRepository extends JpaRepository<Card, Long> {
      * @return Number of cards in the deck
      */
     long countByDeckId(Long deckId);
+
+    /**
+     * Batch fetch cards by their IDs.
+     * This method prevents N+1 query problems when fetching multiple cards.
+     *
+     * @param ids List of card IDs to fetch
+     * @return List of cards matching the given IDs
+     */
+    @Query("SELECT c FROM Card c WHERE c.id IN :ids")
+    List<Card> findAllByIds(@Param("ids") List<Long> ids);
 }
