@@ -2,11 +2,11 @@
 
 A modern, web-based clone of the popular Anki flashcard application, built with Spring Boot WebFlux and implementing the SuperMemo 2 (SM-2) spaced repetition algorithm.
 
-## 🎯 Project Overview
+## Project Overview
 
 Janki helps you learn and memorize information effectively using spaced repetition - a learning technique that shows flashcards at increasing intervals based on how well you know them. The better you know a card, the less frequently you'll see it.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend**: Spring Boot 3.5.9 + WebFlux (reactive)
 - **Language**: Java 25 (GraalVM CE)
@@ -15,27 +15,18 @@ Janki helps you learn and memorize information effectively using spaced repetiti
 - **Build Tool**: Maven
 - **Dependencies**: Spring Data JDBC, Lombok, Validation
 
-## ✨ Features
+## Features
 
 ### Current (MVP)
-- ✅ **Basic Flashcards**: Front/back text cards
-- ✅ **Deck Management**: Create, organize, and manage decks
-- ✅ **SM-2 Algorithm**: Intelligent spaced repetition scheduling
-- ✅ **Study Sessions**: Review cards with immediate feedback
-- ✅ **Rating System**: Four-button interface (Again, Hard, Good, Easy)
-- ✅ **Single User**: No authentication required
+- **Basic Flashcards**: Front/back text cards
+- **Deck Management**: Create, organize, and manage decks
+- **SM-2 Algorithm**: Intelligent spaced repetition scheduling
+- **Study Sessions**: Review cards with immediate feedback
+- **Rating System**: Four-button interface (Again, Hard, Good, Easy)
+- **Single User**: No authentication required
 
-### Planned Enhancements
-- 🔲 Cloze deletion cards (fill-in-the-blank)
-- 🔲 Image occlusion support
-- 🔲 Audio/video card content
-- 🔲 Import/export Anki decks
-- 🔲 Statistics dashboard
-- 🔲 Multi-user support with authentication
-- 🔲 Tag-based organization
-- 🔲 Mobile-responsive PWA
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Java 25 (GraalVM recommended)
@@ -61,7 +52,7 @@ The application will start on **http://localhost:8080**
 
 Janki uses SQLite with a file-based database (`janki.db`) created automatically in the project root directory. No external database setup required!
 
-## 📚 How to Use
+## How to Use
 
 ### 1. Create a Deck
 - Navigate to the home page
@@ -84,7 +75,7 @@ Janki uses SQLite with a file-based database (`janki.db`) created automatically 
   - **Good**: Normal recall → standard interval
   - **Easy**: Trivial recall → longer interval
 
-## 🧠 SM-2 Spaced Repetition Algorithm
+## SM-2 Spaced Repetition Algorithm
 
 Janki implements the SuperMemo 2 algorithm:
 
@@ -105,7 +96,7 @@ Janki implements the SuperMemo 2 algorithm:
 - Minimum value: 1.3
 - Formula: `EF' = EF + (0.1 - (5-q) × (0.08 + (5-q) × 0.02))`
 
-## 🏗️ Architecture
+## Architecture
 
 ### Hybrid Reactive/Blocking Design
 
@@ -166,7 +157,7 @@ src/main/resources/
 - Each card has one review record (one-to-one)
 - Cascade delete: removing a deck removes all cards and review records
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Decks
 - `GET /api/decks` - List all decks
@@ -186,7 +177,7 @@ src/main/resources/
 - `GET /api/study/decks/{deckId}/due` - Get cards due for review
 - `POST /api/study/cards/{cardId}/rate` - Rate a card after review
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -199,7 +190,7 @@ src/main/resources/
 ./mvnw test jacoco:report
 ```
 
-## 🛠️ Development
+## Development
 
 ### Hot Reload
 The project includes Spring Boot DevTools for automatic restart during development.
@@ -226,22 +217,22 @@ SELECT * FROM review_records WHERE next_review_date <= datetime('now');
 5. Add templates for web UI
 6. Write tests
 
-## 📖 Resources
+## Resources
 
 - [SuperMemo SM-2 Algorithm](https://super-memory.com/english/ol/sm2.htm)
 - [Anki Manual](https://docs.ankiweb.net/)
 - [Spring Boot WebFlux Documentation](https://docs.spring.io/spring-boot/reference/web/reactive.html)
 - [Spring Data JDBC](https://spring.io/projects/spring-data-jdbc)
 
-## 📝 License
+## License
 
 This project is for educational purposes.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Inspired by [Anki](https://apps.ankiweb.net/) by Damien Elmes
 - SM-2 algorithm by Piotr Woźniak (SuperMemo)
 
 ---
 
-**Status**: 🚧 Active Development | Last Updated: 2026-01-14
+**Status**: Active Development | Last Updated: 2026-01-14
