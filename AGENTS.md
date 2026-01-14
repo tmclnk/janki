@@ -41,7 +41,7 @@ bd sync               # Sync with git
 ## Coding and Writing Style
 
 - Do not use emoji in documentation or code
-- Keep documentation concise. Generally, a sentence or two should suffice.
+- Keep documentation concise. Generally, a sentence or two should suffice
 - Do not put things in documentation that are likely to fall out of date, 
   such as minor version numbers on libraries; all that matters, from a docs 
-  perspective, is the Java version and the Spring version.
+  perspective, is the Java version and the Spring version
