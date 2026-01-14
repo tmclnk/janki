@@ -46,4 +46,3 @@ CREATE TABLE IF NOT EXISTS review_records (
 
 CREATE INDEX IF NOT EXISTS idx_review_records_card_id ON review_records(card_id);
 CREATE INDEX IF NOT EXISTS idx_review_records_next_review ON review_records(next_review_date);
-CREATE INDEX IF NOT EXISTS idx_review_records_due ON review_records(next_review_date) WHERE next_review_date <= datetime('now');
