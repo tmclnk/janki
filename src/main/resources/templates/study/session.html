@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout}">
+<head>
+    <title>Study Session</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Deck Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="mb-1" th:text="'Study: ' + ${deck.name}">Study: Deck Name</h1>
+                        <p class="text-muted mb-0" id="progress-text">
+                            <span id="cards-remaining">0</span> cards remaining
+                        </p>
+                    </div>
+                    <div>
+                        <a th:href="@{/decks/{id}(id=${deck.id})}" class="btn btn-outline-secondary">
+                            Back to Deck
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Study Card Container -->
+                <div id="study-container">
+                    <!-- Active Card Display -->
+                    <div id="card-display" class="card-container" style="display: none;">
+                        <div class="flashcard" id="flashcard">
+                            <div class="flashcard-content">
+                                <div id="card-front" class="card-face">
+                                    <!-- Front content will be inserted here -->
+                                </div>
+                                <div id="card-back" class="card-face" style="display: none;">
+                                    <!-- Back content will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Show Answer Button -->
+                        <div class="text-center mt-4" id="show-answer-container">
+                            <button class="btn btn-primary btn-lg" id="show-answer-btn" onclick="showAnswer()">
+                                Show Answer
+                            </button>
+                        </div>
+
+                        <!-- Rating Buttons -->
+                        <div class="d-grid gap-2 mt-4" id="rating-buttons" style="display: none;">
+                            <div class="row g-2">
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-danger w-100 rating-btn" onclick="rateCard('AGAIN')">
+                                        Again
+                                        <div class="small">< 1 min</div>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-warning w-100 rating-btn" onclick="rateCard('HARD')">
+                                        Hard
+                                        <div class="small">< 10 min</div>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-success w-100 rating-btn" onclick="rateCard('GOOD')">
+                                        Good
+                                        <div class="small">< 1 day</div>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-primary w-100 rating-btn" onclick="rateCard('EASY')">
+                                        Easy
+                                        <div class="small">< 4 days</div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Session Complete -->
+                    <div id="session-complete" class="text-center py-5" style="display: none;">
+                        <div class="card">
+                            <div class="card-body py-5">
+                                <h2 class="text-success mb-3">Session Complete!</h2>
+                                <p class="lead">Great job! You've reviewed all cards in this session.</p>
+                                <div class="mt-4">
+                                    <a th:href="@{/decks/{id}(id=${deck.id})}" class="btn btn-primary btn-lg">
+                                        Back to Deck
+                                    </a>
+                                    <a href="/decks" class="btn btn-outline-secondary btn-lg ms-2">
+                                        View All Decks
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mt-4">
+                    <div class="progress" style="height: 8px;">
+                        <div id="progress-bar" class="progress-bar bg-success" role="progressbar"
+                             style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Data -->
+        <script th:inline="javascript">
+            // Pass server data to JavaScript
+            const deckId = /*[[${deck.id}]]*/ 0;
+            const dueCards = /*[[${dueCards}]]*/ [];
+            const newCards = /*[[${newCards}]]*/ [];
+
+            // Combine and shuffle cards
+            let studyQueue = [...dueCards, ...newCards];
+            let currentCardIndex = 0;
+            let totalCards = studyQueue.length;
+            let cardsStudied = 0;
+
+            // Initialize session
+            window.addEventListener('DOMContentLoaded', function() {
+                if (totalCards === 0) {
+                    showSessionComplete();
+                } else {
+                    displayCard();
+                }
+            });
+
+            function displayCard() {
+                if (currentCardIndex >= studyQueue.length) {
+                    showSessionComplete();
+                    return;
+                }
+
+                const card = studyQueue[currentCardIndex];
+
+                // Update card content
+                document.getElementById('card-front').innerHTML = card.front;
+                document.getElementById('card-back').innerHTML = card.back;
+
+                // Reset display state
+                document.getElementById('card-front').style.display = 'block';
+                document.getElementById('card-back').style.display = 'none';
+                document.getElementById('show-answer-btn').style.display = 'block';
+                document.getElementById('show-answer-container').style.display = 'block';
+                document.getElementById('rating-buttons').style.display = 'none';
+                document.getElementById('card-display').style.display = 'block';
+
+                // Update progress
+                updateProgress();
+            }
+
+            function showAnswer() {
+                // Add flip animation
+                const flashcard = document.getElementById('flashcard');
+                flashcard.style.transform = 'rotateY(180deg)';
+
+                setTimeout(() => {
+                    // Show back, hide front
+                    document.getElementById('card-front').style.display = 'none';
+                    document.getElementById('card-back').style.display = 'block';
+
+                    // Hide show answer button, show rating buttons
+                    document.getElementById('show-answer-container').style.display = 'none';
+                    document.getElementById('rating-buttons').style.display = 'block';
+
+                    // Reset transform
+                    flashcard.style.transform = 'rotateY(0deg)';
+                }, 150);
+            }
+
+            function rateCard(rating) {
+                const card = studyQueue[currentCardIndex];
+
+                // Disable rating buttons during submission
+                const ratingButtons = document.querySelectorAll('.rating-btn');
+                ratingButtons.forEach(btn => btn.disabled = true);
+
+                // Submit rating
+                const form = new FormData();
+                form.append('rating', rating);
+                form.append('deckId', deckId);
+
+                fetch(`/study/cards/${card.id}/rate`, {
+                    method: 'POST',
+                    body: form
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Move to next card
+                        cardsStudied++;
+                        currentCardIndex++;
+
+                        // Add a brief animation
+                        const flashcard = document.getElementById('flashcard');
+                        flashcard.style.opacity = '0';
+                        flashcard.style.transform = 'scale(0.95)';
+
+                        setTimeout(() => {
+                            flashcard.style.opacity = '1';
+                            flashcard.style.transform = 'scale(1)';
+                            displayCard();
+
+                            // Re-enable buttons
+                            ratingButtons.forEach(btn => btn.disabled = false);
+                        }, 300);
+                    } else {
+                        console.error('Failed to rate card');
+                        alert('Failed to submit rating. Please try again.');
+                        ratingButtons.forEach(btn => btn.disabled = false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                    ratingButtons.forEach(btn => btn.disabled = false);
+                });
+            }
+
+            function updateProgress() {
+                const remaining = totalCards - cardsStudied;
+                document.getElementById('cards-remaining').textContent = remaining;
+
+                const progressPercent = (cardsStudied / totalCards) * 100;
+                document.getElementById('progress-bar').style.width = progressPercent + '%';
+                document.getElementById('progress-bar').setAttribute('aria-valuenow', progressPercent);
+            }
+
+            function showSessionComplete() {
+                document.getElementById('card-display').style.display = 'none';
+                document.getElementById('session-complete').style.display = 'block';
+                document.getElementById('progress-bar').style.width = '100%';
+                document.getElementById('cards-remaining').textContent = '0';
+            }
+        </script>
+
+        <!-- Additional CSS for animations -->
+        <style>
+            .flashcard {
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+
+            .rating-btn {
+                padding: 1rem;
+                font-weight: 600;
+                transition: all 0.2s ease;
+            }
+
+            .rating-btn:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .rating-btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+            .rating-btn .small {
+                font-size: 0.75rem;
+                opacity: 0.8;
+                font-weight: normal;
+            }
+
+            #card-display {
+                animation: fadeIn 0.3s ease-in;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .card-face {
+                transition: opacity 0.2s ease;
+            }
+
+            #session-complete .card {
+                animation: scaleIn 0.4s ease-out;
+            }
+
+            @keyframes scaleIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+        </style>
+    </div>
+</body>
+</html>

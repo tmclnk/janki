@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(pageTitle=${deck.id == null ? 'Create Deck' : 'Edit Deck'}, content=~{::content})}">
+<head>
+    <title>Deck Form</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0" th:text="${deck.id == null ? 'Create Deck' : 'Edit Deck'}">Create Deck</h2>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{${deck.id != null ? '/decks/' + deck.id : '/decks'}}"
+                              th:object="${deck}"
+                              method="post">
+
+                            <!-- Hidden field for PUT method on update -->
+                            <input type="hidden" th:if="${deck.id != null}" name="_method" value="PUT"/>
+
+                            <!-- Name Field -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Deck Name <span class="text-danger">*</span></label>
+                                <input type="text"
+                                       class="form-control"
+                                       th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                       id="name"
+                                       th:field="*{name}"
+                                       placeholder="e.g., Japanese Vocabulary"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                    Name error
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control"
+                                          th:field="*{description}"
+                                          id="description"
+                                          rows="4"
+                                          placeholder="Optional description of this deck">
+                                </textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                    Description error
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <span th:text="${deck.id == null} ? 'Create Deck' : 'Update Deck'">Create Deck</span>
+                                </button>
+                                <a href="/decks" class="btn btn-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
