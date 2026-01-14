@@ -133,11 +133,11 @@
                     return;
                 }
 
-                const card = studyQueue[currentCardIndex];
+                const studyCard = studyQueue[currentCardIndex];
 
                 // Update card content
-                document.getElementById('card-front').innerHTML = card.front;
-                document.getElementById('card-back').innerHTML = card.back;
+                document.getElementById('card-front').innerHTML = studyCard.card.front;
+                document.getElementById('card-back').innerHTML = studyCard.card.back;
 
                 // Reset display state
                 document.getElementById('card-front').style.display = 'block';
@@ -171,7 +171,7 @@
             }
 
             function rateCard(rating) {
-                const card = studyQueue[currentCardIndex];
+                const studyCard = studyQueue[currentCardIndex];
 
                 // Disable rating buttons during submission
                 const ratingButtons = document.querySelectorAll('.rating-btn');
@@ -182,7 +182,7 @@
                 form.append('rating', rating);
                 form.append('deckId', deckId);
 
-                fetch(`/study/cards/${card.id}/rate`, {
+                fetch(`/study/cards/${studyCard.card.id}/rate`, {
                     method: 'POST',
                     body: form
                 })

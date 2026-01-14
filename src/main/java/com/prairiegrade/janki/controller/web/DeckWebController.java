@@ -19,13 +19,16 @@ public class DeckWebController {
 
     @GetMapping
     public String listDecks(Model model) {
+        model.addAttribute("pageTitle", "My Decks");
         model.addAttribute("decks", deckService.getAllDecks());
         return "decks/list";
     }
 
     @GetMapping("/{id}")
     public String viewDeck(@PathVariable Long id, Model model) {
-        model.addAttribute("deck", deckService.getDeck(id));
+        Deck deck = deckService.getDeck(id);
+        model.addAttribute("pageTitle", deck.getName());
+        model.addAttribute("deck", deck);
         model.addAttribute("stats", deckService.getDeckStats(id));
         return "decks/view";
     }

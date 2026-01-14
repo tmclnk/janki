@@ -111,17 +111,9 @@ public class GlobalExceptionHandler {
      * Logs full stack trace and returns generic error message to user.
      */
     @ExceptionHandler(RuntimeException.class)
-    public Object handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
         log.error("Unexpected runtime exception", ex);
-
-        if (isJsonRequest(request)) {
-            ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred",
-                request.getRequestURI()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-        }
 
         // Return HTML error page for web requests
         ModelAndView mav = new ModelAndView("error/500");
@@ -134,17 +126,9 @@ public class GlobalExceptionHandler {
      * Logs full stack trace and returns generic error message to user.
      */
     @ExceptionHandler(Exception.class)
-    public Object handleGenericException(Exception ex, HttpServletRequest request) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView handleGenericException(Exception ex, HttpServletRequest request) {
         log.error("Unexpected error", ex);
-
-        if (isJsonRequest(request)) {
-            ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred",
-                request.getRequestURI()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-        }
 
         // Return HTML error page for web requests
         ModelAndView mav = new ModelAndView("error/500");

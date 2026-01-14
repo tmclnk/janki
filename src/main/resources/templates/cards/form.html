@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout}">
+<head>
+    <title>Card Form</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/decks">My Decks</a></li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/decks/{id}(id=${deck.id})}" th:text="${deck.name}">Deck Name</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <span th:text="${card.id != null ? 'Edit Card' : 'Add Card'}">Add Card</span>
+                        </li>
+                    </ol>
+                </nav>
+
+                <!-- Page Header -->
+                <h2 class="mb-4" th:text="${card.id != null ? 'Edit Card' : 'Add Card'}">Add Card</h2>
+
+                <!-- Card Form -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <form th:action="@{${card.id != null ? '/decks/' + deck.id + '/cards/' + card.id : '/decks/' + deck.id + '/cards'}}"
+                              method="post">
+
+                            <!-- Front Side -->
+                            <div class="mb-4">
+                                <label for="front" class="form-label fw-bold">
+                                    Front (Question)
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <textarea
+                                    class="form-control"
+                                    id="front"
+                                    name="front"
+                                    rows="4"
+                                    required
+                                    placeholder="Enter the question or prompt..."
+                                    th:text="${card.front}"></textarea>
+                                <div class="form-text">
+                                    This is what you'll see when studying. Can be a word, phrase, or question.
+                                </div>
+                            </div>
+
+                            <!-- Back Side -->
+                            <div class="mb-4">
+                                <label for="back" class="form-label fw-bold">
+                                    Back (Answer)
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <textarea
+                                    class="form-control"
+                                    id="back"
+                                    name="back"
+                                    rows="4"
+                                    required
+                                    placeholder="Enter the answer or explanation..."
+                                    th:text="${card.back}"></textarea>
+                                <div class="form-text">
+                                    This is revealed when you click "Show Answer" during study.
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <span th:text="${card.id != null ? 'Update Card' : 'Add Card'}">Add Card</span>
+                                </button>
+                                <a th:href="@{/decks/{id}(id=${deck.id})}" class="btn btn-outline-secondary">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Preview Card (Optional Enhancement) -->
+                <div class="card mt-4" th:if="${card.front != null && card.back != null}">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Preview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Front:</strong>
+                            <p class="mt-2" th:text="${card.front}">Front content</p>
+                        </div>
+                        <hr>
+                        <div>
+                            <strong>Back:</strong>
+                            <p class="mt-2" th:text="${card.back}">Back content</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
