@@ -1,2 +1,5 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# Use bd merge for beads JSONL files
+.beads/issues.jsonl merge=beads
