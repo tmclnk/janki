@@ -45,6 +45,8 @@ bd sync               # Sync with git
 - Do not put things in documentation that are likely to fall out of date, 
   such as minor version numbers on libraries; all that matters, from a docs 
   perspective, is the Java version and the Spring version
+- Don't list individual files or put stuff like "tree" of the code structure into documentation, 
+  it will fall out of date or just makes it harder to find useful info.
 
 ## Tools
 
