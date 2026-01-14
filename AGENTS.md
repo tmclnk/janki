@@ -53,3 +53,4 @@ bd sync               # Sync with git
 - When invoking maven goals/phases, only use the maven wrapper mvnw in this 
   project. Do not attempt to use system-wide mvn.
 - Use Conventional Commits with git
+- If sdkman is available, use `sdk env` to load the correct java sdk from .sdkmanrc before trying to run the app
