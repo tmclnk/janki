@@ -34,3 +34,6 @@ build/
 
 ### sqlite ###
 *.db
+
+## Claude ##
+.claude/settings.local.json
