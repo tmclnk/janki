@@ -45,3 +45,8 @@ bd sync               # Sync with git
 - Do not put things in documentation that are likely to fall out of date, 
   such as minor version numbers on libraries; all that matters, from a docs 
   perspective, is the Java version and the Spring version
+
+## Tools
+
+- When invoking maven goals/phases, only use the maven wrapper mvnw in this 
+  project. Do not attempt to use systemwide mvn.
