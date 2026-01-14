@@ -1,7 +1,7 @@
 package com.prairiegrade.janki.repository;
 
 import com.prairiegrade.janki.domain.Deck;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * Repository for Deck entities.
  */
 @Repository
-public interface DeckRepository extends CrudRepository<Deck, Long> {
+public interface DeckRepository extends JpaRepository<Deck, Long> {
 
     /**
      * Find all decks ordered by name.

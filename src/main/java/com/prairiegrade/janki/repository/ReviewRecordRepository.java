@@ -1,8 +1,8 @@
 package com.prairiegrade.janki.repository;
 
 import com.prairiegrade.janki.domain.ReviewRecord;
-import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
  * Repository for ReviewRecord entities.
  */
 @Repository
-public interface ReviewRecordRepository extends CrudRepository<ReviewRecord, Long> {
+public interface ReviewRecordRepository extends JpaRepository<ReviewRecord, Long> {
 
     /**
      * Find the review record for a specific card.
@@ -32,10 +32,11 @@ public interface ReviewRecordRepository extends CrudRepository<ReviewRecord, Lon
      * @param limit  Maximum number of records to return
      * @return List of due review records
      */
-    @Query("SELECT rr.* FROM review_records rr " +
+    @Query(value = "SELECT rr.* FROM review_records rr " +
            "INNER JOIN cards c ON rr.card_id = c.id " +
            "WHERE c.deck_id = :deckId AND rr.next_review_date <= :now " +
-           "ORDER BY rr.next_review_date ASC LIMIT :limit")
+           "ORDER BY rr.next_review_date ASC LIMIT :limit",
+           nativeQuery = true)
     List<ReviewRecord> findDueReviews(
             @Param("deckId") Long deckId,
             @Param("now") LocalDateTime now,

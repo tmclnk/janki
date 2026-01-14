@@ -1,7 +1,7 @@
 package com.prairiegrade.janki.repository;
 
 import com.prairiegrade.janki.domain.Card;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * Repository for Card entities.
  */
 @Repository
-public interface CardRepository extends CrudRepository<Card, Long> {
+public interface CardRepository extends JpaRepository<Card, Long> {
 
     /**
      * Find all cards in a specific deck.
